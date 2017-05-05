@@ -10,6 +10,7 @@ $ npm install tilestrata-postgismvt --save
 ### Sample Usage
 
 Serve all map features.
+
 ![default](img/default.png?raw=true "default")
 
 ```js
@@ -38,8 +39,12 @@ server.layer('mylayer').route('tile.mvt')
   );
 ```
 
-Cluster map features sharing a coordinate in the tile coordinate space.
-Attributes will be dropped. Each feature contains an attribute *count* that can be used e. g. for a density map.
+### Point clustering
+
+Clustering can be used for point features sharing a coordinate in the tile coordinate space. Each feature contains an attribute *count* that can be used e. g. for a density map.
+
+*cluster*: Attributes will be dropped.
+
 ![cluster](img/cluster.png?raw=true "cluster")
 
 ```js
@@ -55,8 +60,8 @@ server.layer('mylayer').route('tile.mvt')
   );
 ```
 
-Cluster map features sharing a coordinate in the tile coordinate space.
-Attributes will be concatenated. Each feature contains an attribute *count* that can be used e. g. for a density map.
+*cluster_fields*: Attributes will be concatenated.
+
 ![cluster_fields](img/cluster_fields.png?raw=true "cluster_fields")
 
 ```js
@@ -72,7 +77,7 @@ server.layer('mylayer').route('tile.mvt')
   );
 ```
 
-*resolution* and *mode* support functions. The following configuration serves attributes in higher zoom levels only and increases the geographic accuracy.
+*resolution* and *mode* both support a function as a parameter. The following configuration serves attributes in higher zoom levels only and increases the geographic accuracy.
 
 ```js
 server.layer('mylayer').route('tile.mvt')

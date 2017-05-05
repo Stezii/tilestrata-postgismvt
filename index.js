@@ -22,7 +22,13 @@ module.exports = function(options) {
 			err.statusCode = 500;
 			callback(err);
 		});
-		callback(null);
+		if ((lyr.mode === 'cluster' || lyr.mode === 'cluster_fields' || (typeof lyr.mode === 'function')) && lyr.type != 'circle') {
+			var err = new Error('Clustering and mode functions can only be used in conjunction with point data');
+			err.statusCode = 422;
+			callback(err);
+		} else {
+			callback(null);
+		}
 	}
 
 	/**
