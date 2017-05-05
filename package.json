@@ -1,6 +1,6 @@
 {
   "name": "tilestrata-postgismvt",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A TileStrata plugin for reading Mapbox Vector Tiles from a PostGIS database",
   "author": "Stefan Zimmer <stefan.zimmer_shb@t-online.de>",
   "license": "Apache-2.0",

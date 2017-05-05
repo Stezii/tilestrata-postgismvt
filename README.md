@@ -77,7 +77,7 @@ server.layer('mylayer').route('tile.mvt')
   );
 ```
 
-*resolution* and *mode* both support a function as a parameter. The following configuration serves attributes in higher zoom levels only and increases the geographic accuracy.
+*resolution* and *mode* both support a function as a parameter. The following configuration serves attributes in higher zoom levels only and increases the spatial accuracy.
 
 ```js
 server.layer('mylayer').route('tile.mvt')
