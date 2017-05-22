@@ -1,4 +1,5 @@
 var pg = require('pg');
+var zlib = require('zlib');
 const SQL = require('sql-template-strings');
 
 module.exports = function(options) {
@@ -96,9 +97,17 @@ module.exports = function(options) {
 				default:
 					query = `
 						SELECT ST_AsMVT('${tile.layer}', ${resolution}, 'geom', q) AS mvt FROM (
-							SELECT ST_AsMVTGeom(ST_Transform(${lyr.table}.${lyr.geometry}, 3857), TileBBox(${tile.z}, ${tile.x}, ${tile.y}, 3857), ${resolution}, ${lyr.buffer}, ${clip_geom}) geom ${fields}
+                            WITH a AS (
+							SELECT ST_AsMVTGeom(
+                                ST_Transform(${lyr.table}.${lyr.geometry}, 3857),
+                                TileBBox(${tile.z}, ${tile.x}, ${tile.y}, 3857),
+                                ${resolution},
+                                ${lyr.buffer},
+                                ${clip_geom} ) geom ${fields}
 							FROM ${lyr.table}
 							WHERE ST_Intersects(TileBBox(${tile.z}, ${tile.x}, ${tile.y}, ${lyr.srid}), ${lyr.table}.${lyr.geometry})
+                            )
+                            SELECT * FROM a WHERE geom IS NOT NULL
 						) AS q
 					`;
 					break;
@@ -116,7 +125,11 @@ module.exports = function(options) {
 				err.statusCode = 204;
 				return callback(err);
 			}
-			callback(null, result.rows[0].mvt, {'Content-Type': 'application/x-protobuf'});
+            zlib.gzip(result.rows[0].mvt, function(err, result) {
+                if (!err) {
+                    callback(null, result, {'Content-Type': 'application/x-protobuf', 'Content-Encoding': 'gzip'});
+                }
+            });
 		});
 	}
 
